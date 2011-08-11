@@ -1,7 +1,5 @@
 #!/usr/bin/python2
 
-# $Id$
-
 # ** The MIT License **
 #
 # Copyright (c) 2007 Eric Davis (aka Insanum)
@@ -46,8 +44,8 @@
 #
 
 __program__ = 'gcalcli'
-__version__ = 'v1.4'
-__author__  = 'Insanum'
+__version__ = 'v2.1'
+__author__  = 'Eric Davis'
 
 import inspect
 
@@ -62,6 +60,11 @@ from dateutil.parser import *
 from unicodedata import east_asian_width
 
 
+def Version():
+    sys.stdout.write(__program__+' '+__version__+' ('+__author__+')\n')
+    sys.exit(1)
+
+
 def Usage():
     sys.stdout.write('''
 Usage:
@@ -71,6 +74,8 @@ gcalcli [options] command [command args]
  Options:
 
   --help                   this usage text
+
+  --version                version information
 
   --config <file>          config file to read (default is '~/.gcalclirc')
 
@@ -799,7 +804,7 @@ class gcalcli:
                 # Catch the year 2038 problem here as the python dateutil module
                 # can choke throwing a ValueError exception. If either the start
                 # or end time for an event has a year '>= 2038' dump it.
-                if event.s.year >= 2038 or event.e.year >= 2038:
+                if event.s.year >= 2038 or event.e.year >= 2039:
                     continue
 
                 eventList.append(event)
@@ -1242,6 +1247,7 @@ def BowChickaWowWow():
     try:
         opts, args = getopt.getopt(sys.argv[1:], "",
                                    ["help",
+                                    "version",
                                     "config=",
                                     "user=",
                                     "pw=",
@@ -1309,6 +1315,9 @@ def BowChickaWowWow():
 
         if opt == "--help":
             Usage()
+
+        if opt == "--version":
+            Version()
 
         elif opt == "--user":
             usr = arg
